@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+body {
+    margin: 0;
+    font-family: "Open sans", sans-serif;
+    background-image: url(../static_images/clothes-line-963960_1920.jpg);
+    color: white;
+    background-size: cover;
+}
+
+header {
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr auto 1fr;
+    background-color: rgba(255, 255, 255, 0.5);
+    align-items: center;
+    padding: 5px;
+    gap: 10px;
+}
+
+.logo {
+    background-image: url("../static_images/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+}
+
+.logo_text h2 {
+    margin: 0;
+    font-size: 2em;
+}
+
+.phone_logo {
+    background-image: url("../static_images/phone-receiver-silhouette.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 25px;
+    width: 25px;
+}
+
+.text {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.text:hover {
+    font-size: 150%;
+}
+
+.address_logo {
+    background-image: url("../static_images/maps-and-flags.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 25px;
+    width: 25px;
+}
+
+
+main {
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    align-items: center;
+    justify-content: left;
+    height: 100vh;
+    padding: 5rem;
+}
+
+.info {
+    grid-row: 2/3;
+    text-align:center;
+    margin-bottom: 5rem;
+}
+
+.info h1 {
+    font-size: 3rem;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.info p {
+    font-size: 1.2rem;
+}
+
+.form {
+    grid-row: 3/4;
+    text-align: center;
+    align-self: start;
+}
+
+.form input {
+    width: 80%;
+    padding: 1.3rem;
+    border: none;
+    border-radius: 0.25rem;
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    outline: none;
+}
+
+.form button {
+    padding: 1.3rem;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #764725;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.form button[type="submit"]:hover {
+    background-color: #3C2415;
+  }

@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+
+body {
+    margin: 0;
+    font-family: "Open sans", sans-serif;
+    background: rgb(239, 240, 209);
+    color: black;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 30px;
+}
+
+header {
+    padding: 20px 40px;
+    background: rgb(215, 192, 208);
+    align-items: center;
+}
+
+header h1 {
+    grid-column: span 6;
+}
+
+header nav {
+    grid-column: 7 / span 6;
+    justify-self: right;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #fff;
+    margin-left: 15px;
+}
+
+main {
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 1200px;
+}
+
+main img {
+    grid-column: span 4;
+    width: 100%;
+}
+
+main .welcome {
+    grid-column: 8 / span 5;
+    align-self: center;
+}
+
+main h3 {
+    grid-column: span 12;
+    text-align: center;
+    text-decoration: underline;
+    font-size: 2rem;
+}
+
+main .card {
+    grid-column: span 4;
+    background-color: rgb(119, 186, 153);
+    padding: 10px 20px;
+}
+
+/* Tablet Media Querie */
+@media (max-width: 900px) {
+    body {
+        background-color: #e7d8d9;
+    }
+    header nav {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+    }
+    main img {
+        grid-column: 2 / 12;
+    }
+
+    main .welcome {
+        grid-column: 3 / span 8;
+        text-align: center;
+    }
+    main .card {
+        grid-column: 3 / span 8;
+        text-align: center;
+    }
+}
+
+/* Smartphone Media Querie */
+@media (max-width: 650px) {
+    body {
+        background-color: beige;
+    }
+
+    header {
+        padding: 20px 0px;
+    }
+
+    header h1 {
+        grid-column: span 12;
+        text-align: center;
+        margin: 0;
+    }
+
+    header nav {
+        grid-column: span 12;
+        justify-self: center;
+    }
+    main img {
+        grid-column: span 12;
+    }
+    main .welcome {
+        grid-column: span 12;
+    }
+    main .card {
+        grid-column: span 12;
+    }
+}
+
+
+@keyframes welcome {
+    from {
+        left: -50%;
+    }
+    to {
+        left: 100%;
+    }
+}
+
+.welcome {
+    position: relative;
+    animation-name: welcome;
+    animation-duration:10s;
+    animation-timing-function: linear;
+    animation-direction: reverse;
+    animation-iteration-count: 1;
+}
+
+@keyframes blog {
+    0% {
+        color: rgb(215, 192, 208);
+    }
+    25% {
+        color: rgb(211, 63, 73);
+    }
+    50% {
+        color: rgb(239, 240, 209);
+    }
+    75% {
+        color: rgb(119, 186, 153);
+    }
+    100% {
+        color: rgb(38, 39, 48);
+    }
+
+}
+.blog {
+    animation-name: blog;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+}
+
+
+.card:hover{
+    background-color: rgb(68, 136, 102);
+}
+
+nav:hover {
+    font-size: 150%;
+}
