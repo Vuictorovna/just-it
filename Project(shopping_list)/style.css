@@ -82,3 +82,16 @@ body {
     display: inline-block;
     width: 50px;
 }
+
+.shopping_list {
+    position: fixed;
+    top: 1rem;
+    right: 8rem;
+    background-color: #f0c846;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+

@@ -1,15 +1,16 @@
 const addBtn = document.getElementById("add")
-
 const notes = JSON.parse(localStorage.getItem("notes"))
 
 if (notes) {
   notes.forEach((note) => addNewNote(note))
 }
-
 addBtn.addEventListener("click", () => addNewNote())
 
-const PRODUCTS = ["Apples", "Oranges", "Bananas", "Grapes"]
+const shoppingListBtn = document.getElementById("shopping_list")
+shoppingListBtn.addEventListener("click", () => createShoppingList())
 
+
+const PRODUCTS = ["Apples", "Oranges", "Bananas", "Grapes"]
 
 function addNewNote() {
     const note = document.createElement("div")
@@ -24,12 +25,20 @@ function addNewNote() {
     const buttons = document.createElement("div")
     buttons.classList.add("buttons")
 
+    const recipeNameInput = document.createElement("input")
+    recipeNameInput.type = "text"
+    recipeNameInput.placeholder = "Recipe Name"
+    recipeNameInput.classList.add("recipe-input")
+
     const editBtn = document.createElement("button")
     editBtn.classList.add("edit")
     editBtn.innerHTML = '<i class="fas fa-edit"></i>'
-    editBtn.addEventListener("click", () => {
-        addProductSelect(main)
-    })
+    editBtn.addEventListener("click", () => addProductSelect(main))
+
+    const submitBtn = document.createElement("button")
+    submitBtn.type = "button"
+    submitBtn.textContent = "Add"
+    submitBtn.addEventListener("click", () => updateLS())
 
     const deleteNoteBtn = document.createElement("button")
     deleteNoteBtn.classList.add("deleteNote")
@@ -41,21 +50,20 @@ function addNewNote() {
 
     const downloadBtn = document.createElement("button")
     downloadBtn.textContent = "Download"
-    downloadBtn.addEventListener("click", () => {
-        createShoppingList()
-    })
+    downloadBtn.addEventListener("click", (event) => createDownload(event))
 
     tools.appendChild(deleteNoteBtn)
     tools.appendChild(downloadBtn)
     buttons.appendChild(editBtn)
+    buttons.appendChild(submitBtn)
 
+    main.appendChild(recipeNameInput)
     main.appendChild(buttons)
     note.appendChild(tools)
     note.appendChild(main)
 
     document.body.appendChild(note)
 }
-
 
 function addProductSelect(parent) {
     const container = document.createElement("div")
@@ -86,14 +94,6 @@ function addProductSelect(parent) {
     amountInput.max = 10000
     amountInput.value = 1
 
-    //Create submit button
-    const submitBtn = document.createElement("button")
-    submitBtn.type = "button"
-    submitBtn.textContent = "Add"
-    submitBtn.addEventListener("click", () => {
-        updateLS()
-    })
-
     //Create delete button
     const deleteBtn = document.createElement("button")
     deleteBtn.classList.add("delete")
@@ -105,7 +105,6 @@ function addProductSelect(parent) {
 
     container.appendChild(select)
     container.appendChild(amountInput)
-    container.appendChild(submitBtn)
     container.appendChild(deleteBtn)
 
     parent.appendChild(container)
@@ -123,36 +122,71 @@ function removeProductSelect(selectContainer) {
     selectContainer.remove()
 }
 
-
 function updateLS() {
-    const productContainers = document.querySelectorAll(".product-container")
-    const notes = []
+    const notes = document.querySelectorAll(".note")
 
-    productContainers.forEach((container) => {
+    const savedRecipes = []
+
+    notes.forEach((note) => {
+      const recipeNameInput = note.querySelector(".recipe-input")
+      const productContainers = note.querySelectorAll(".product-container")
+
+      const recipeName = recipeNameInput.value.trim()
+      if (!recipeName) {
+        alert("Please enter a recipe name.")
+        return
+      }
+
+      const ingredients = []
+
+      productContainers.forEach((container) => {
         const select = container.querySelector(".product-select")
         const amount = container.querySelector(".amount-input")
-        const note = {
-            product: select.value,
-            amount: amount.value
+        const ingredient = {
+          product: select.value.trim(),
+          amount: amount.value.trim()
         }
-        notes.push(note)
+        ingredients.push(ingredient)
+      })
+
+      const recipe = {
+        "recipe name": recipeName,
+        "ingredients": ingredients
+      }
+
+      savedRecipes.push(recipe)
     })
 
-    localStorage.setItem("notes", JSON.stringify(notes))
+    localStorage.setItem("recipes", JSON.stringify(savedRecipes))
 }
 
+function createDownload(event) {
+    const selectedNote = event.target.closest('.note')
+    const recipeName = selectedNote.querySelector('.recipe-input').value.trim()
 
-function createShoppingList() {
-    const notes = JSON.parse(localStorage.getItem("notes")) || []
-    const shoppingListContent = notes.map((note) => `${note.product} ${note.amount}`).join("\n")
+    const recipes = JSON.parse(localStorage.getItem("recipes")) || []
+    const recipe = recipes.find((r) => r["recipe name"] === recipeName)
+
+    if (!recipe) {
+        console.log("Recipe not found.")
+        return
+    }
+
+    const shoppingListContent = recipe.ingredients
+        .map((ingredient) => `${ingredient.product} ${ingredient.amount}`)
+        .join("\n")
+
     const blob = new Blob([shoppingListContent], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "shopping-list.txt"
+    a.download = `${recipeName}.txt`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 }
 
+function createShoppingList() {
+    pass
+}
