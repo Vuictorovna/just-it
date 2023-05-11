@@ -1,3 +1,6 @@
+// import products from './products.js'
+// const { products } = require('./products.js')
+
 const addBtn = document.getElementById("add")
 const notes = JSON.parse(localStorage.getItem("notes"))
 
@@ -8,7 +11,6 @@ addBtn.addEventListener("click", () => addNewNote())
 
 const shoppingListBtn = document.getElementById("shopping_list")
 shoppingListBtn.addEventListener("click", () => createShoppingList())
-
 
 const PRODUCTS = ["Apples", "Oranges", "Bananas", "Grapes"]
 
@@ -114,14 +116,6 @@ function addProductSelect(parent) {
     container.style.marginRight = "10px"
 }
 
-function removeProductSelect(selectContainer) {
-    const amountInput = selectContainer.querySelector(".amount-input")
-    const submitBtn = selectContainer.querySelector("button[type='button']")
-    selectContainer.removeChild(amountInput)
-    selectContainer.removeChild(submitBtn)
-    selectContainer.remove()
-}
-
 function updateLS() {
     const notes = document.querySelectorAll(".note")
 
@@ -188,5 +182,36 @@ function createDownload(event) {
 }
 
 function createShoppingList() {
-    pass
-}
+  const recipes = JSON.parse(localStorage.getItem("recipes")) || []
+  const shoppingList = {}
+
+  recipes.forEach((recipe) => {
+    recipe.ingredients.forEach((ingredient) => {
+      const { product, amount } = ingredient
+      if (shoppingList[product]) {
+        shoppingList[product] += parseInt(amount)
+      } else {
+        shoppingList[product] = parseInt(amount)
+      }
+    })
+  })
+
+  const shoppingListContent = Object.entries(shoppingList)
+    .map(([product, amount]) => `${product} ${amount}`)
+    .join("\n")
+
+  if (!shoppingListContent) {
+    alert("Shopping list is empty.")
+    return
+  }
+  const blob = new Blob([shoppingListContent], { type: "text/plain" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = "shopping-list.txt"
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+  }
+
