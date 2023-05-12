@@ -1,12 +1,12 @@
 const recipesData = JSON.parse(localStorage.getItem("recipes"));
 
-// if (notes) {
-//   notes.forEach((note) => addNewNote(note));
+// if (recipes) {
+//   recipes.forEach((recipe) => addNewRecipe(recipe));
 // }
-// addBtn.addEventListener("click", () => addNewNote());
+// addBtn.addEventListener("click", () => addNewRecipe());
 
 const addBtn = document.getElementById("add_recipe");
-addBtn.addEventListener("click", () => addNewNote());
+addBtn.addEventListener("click", () => addNewRecipe());
 
 const shoppingListBtn = document.getElementById("shopping_list");
 shoppingListBtn.addEventListener("click", () => createShoppingList());
@@ -39,18 +39,11 @@ const PRODUCTS = [
   "thyme",
 ];
 
-let noteCounter = 0;
-
-function generateUniqueId() {
-  noteCounter++;
-  return noteCounter;
-}
-
-function addNewNote() {
-  const noteId = generateUniqueId();
-  const note = document.createElement("div");
-  note.classList.add("note");
-  note.dataset.id = noteId;
+function addNewRecipe() {
+  const recipeID = crypto.randomUUID();
+  const recipe = document.createElement("div");
+  recipe.classList.add("recipe");
+  recipe.dataset.id = recipeID;
 
   const tools = document.createElement("div");
   tools.classList.add("tools");
@@ -66,21 +59,21 @@ function addNewNote() {
   const addBtn = document.createElement("button");
   addBtn.classList.add("add");
   addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-  addBtn.addEventListener("click", () => addProductSelect(main)); // addProductSelect(ingredients)
+  addBtn.addEventListener("click", () => addProductSelect(main));
 
   const saveBtn = document.createElement("button");
   saveBtn.classList.add("saveBtn");
   saveBtn.innerHTML = '<i class="fas fa-save"></i>';
   saveBtn.addEventListener("click", () => {
-    saveLS();
+    saveRecipe(recipe);
   });
 
-  const deleteNoteBtn = document.createElement("button");
-  deleteNoteBtn.classList.add("deleteNote");
-  deleteNoteBtn.innerHTML = '<i class="fas fa-times"></i>';
-  deleteNoteBtn.addEventListener("click", () => {
-    note.remove();
-    updateLS(note);
+  const deleteRecipeBtn = document.createElement("button");
+  deleteRecipeBtn.classList.add("deleterecipe");
+  deleteRecipeBtn.innerHTML = '<i class="fas fa-times"></i>';
+  deleteRecipeBtn.addEventListener("click", () => {
+    recipe.remove();
+    deleteRecipe(recipe);
   });
 
   const downloadBtn = document.createElement("button");
@@ -91,13 +84,13 @@ function addNewNote() {
   tools.appendChild(addBtn);
   tools.appendChild(saveBtn);
   tools.appendChild(downloadBtn);
-  tools.appendChild(deleteNoteBtn);
+  tools.appendChild(deleteRecipeBtn);
 
   main.appendChild(recipeNameInput);
-  note.appendChild(tools);
-  note.appendChild(main);
+  recipe.appendChild(tools);
+  recipe.appendChild(main);
 
-  document.body.appendChild(note);
+  document.body.appendChild(recipe);
 }
 
 function addProductSelect(parent) {
@@ -134,7 +127,7 @@ function addProductSelect(parent) {
   deleteBtn.classList.add("delete");
   deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
   deleteBtn.addEventListener("click", () => {
-    deleteIngredient(container, deleteBtn);
+    container.remove();
   });
 
   container.appendChild(select);
@@ -144,52 +137,47 @@ function addProductSelect(parent) {
   parent.appendChild(container);
 }
 
-function saveLS() {
-  const notes = document.querySelectorAll(".note");
+function saveRecipe(recipe) {
+  const recipeId = recipe.dataset.id;
+  const recipeNameInput = recipe.querySelector(".recipe-input");
+  const productContainers = recipe.querySelectorAll(".product-container");
 
-  const savedRecipes = {};
+  const recipeName = recipeNameInput.value.trim();
+  if (!recipeName) {
+    alert("Please enter a recipe name");
+    return;
+  }
 
-  notes.forEach((note) => {
-    const recipeId = note.dataset.id;
-    const recipeNameInput = note.querySelector(".recipe-input");
-    const productContainers = note.querySelectorAll(".product-container");
+  const ingredients = [];
 
-    const recipeName = recipeNameInput.value.trim();
-    if (!recipeName) {
-      alert("Please enter a recipe name.");
+  for (const container of productContainers) {
+    const select = container.querySelector(".product-select");
+    const amount = container.querySelector(".amount-input");
+    const ingredient = {
+      name: select.value.trim(),
+      amount: amount.value.trim(),
+    };
+
+    if (!ingredient.name) {
+      alert("Please select ingredient");
       return;
     }
 
-    const ingredients = [];
-
-    productContainers.forEach((container) => {
-      const select = container.querySelector(".product-select");
-      const amount = container.querySelector(".amount-input");
-      const ingredient = {
-        name: select.value.trim(),
-        amount: amount.value.trim(),
-      };
-      ingredients.push(ingredient);
-    });
-
-    savedRecipes[recipeId] = {
-      name: recipeName,
-      ingredients: ingredients,
-    };
-    console.log("hello, I'm here!");
-  });
+    ingredients.push(ingredient);
+  }
 
   const recipesData = JSON.parse(localStorage.getItem("recipes")) || {};
 
-  for (const recipeId in savedRecipes) {
-    recipesData[recipeId] = savedRecipes[recipeId];
-  }
+  recipesData[recipeId] = {
+    name: recipeName,
+    ingredients: ingredients,
+  };
 
   localStorage.setItem("recipes", JSON.stringify(recipesData));
 }
 
-function updateLS(note) {
-  const recipeId = note.dataset.id;
+function deleteRecipe(recipe) {
+  const recipeId = recipe.dataset.id;
 
   const recipesData = JSON.parse(localStorage.getItem("recipes")) || {};
 
@@ -198,53 +186,9 @@ function updateLS(note) {
   localStorage.setItem("recipes", JSON.stringify(recipesData));
 }
 
-function deleteIngredient(container, deleteBtn) {
-  const parentContainer = container.parentElement;
-  const recipeNameInput = parentContainer.querySelector(".recipe-input");
-  const productContainers =
-    parentContainer.querySelectorAll(".product-container");
-
-  const recipeName = recipeNameInput.value.trim();
-  if (!recipeName) {
-    alert("Please enter a recipe name.");
-    return;
-  }
-
-  const updatedIngredients = [];
-
-  productContainers.forEach((container) => {
-    if (container !== deleteBtn.parentElement) {
-      const select = container.querySelector(".product-select");
-      const amount = container.querySelector(".amount-input");
-      const ingredient = {
-        product: select.value.trim(),
-        amount: amount.value.trim(),
-      };
-      updatedIngredients.push(ingredient);
-    }
-  });
-
-  const updatedRecipe = {
-    "recipe name": recipeName,
-    ingredients: updatedIngredients,
-  };
-
-  const recipesData = JSON.parse(localStorage.getItem("recipes")) || {};
-  for (const recipeId in recipesData) {
-    if (recipesData[recipeId]["recipe name"] === recipeName) {
-      recipesData[recipeId] = updatedRecipe;
-      break;
-    }
-  }
-
-  localStorage.setItem("recipes", JSON.stringify(recipesData));
-
-  container.remove();
-}
-
 function createDownload(event) {
-  const selectedNote = event.target.closest(".note");
-  const recipeName = selectedNote.querySelector(".recipe-input").value.trim();
+  const selectedrecipe = event.target.closest(".recipe");
+  const recipeName = selectedrecipe.querySelector(".recipe-input").value.trim();
 
   const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
   const recipe = recipes.find((r) => r["recipe name"] === recipeName);
