@@ -1,16 +1,3 @@
-const recipesData = JSON.parse(localStorage.getItem("recipes"));
-
-// if (recipes) {
-//   recipes.forEach((recipe) => addNewRecipe(recipe));
-// }
-// addBtn.addEventListener("click", () => addNewRecipe());
-
-const addBtn = document.getElementById("add_recipe");
-addBtn.addEventListener("click", () => addNewRecipe());
-
-const shoppingListBtn = document.getElementById("shopping_list");
-shoppingListBtn.addEventListener("click", () => createShoppingList());
-
 const PRODUCTS = [
   "salt",
   "sugar",
@@ -39,8 +26,32 @@ const PRODUCTS = [
   "thyme",
 ];
 
-function addNewRecipe() {
-  const recipeID = crypto.randomUUID();
+const recipesData = JSON.parse(localStorage.getItem("recipes"));
+
+for (const recipeId in recipesData) {
+  const savedRecipe = recipesData[recipeId];
+  const recipe = makeRecipe(recipeId, savedRecipe.name);
+
+  const main = recipe.querySelector(".main");
+  savedRecipe.ingredients.forEach((ingredient) => {
+    const { name, amount } = ingredient;
+    const productSelect = makeProductSelect(name, amount);
+    main.appendChild(productSelect);
+  });
+
+  document.body.appendChild(recipe);
+}
+
+const addBtn = document.getElementById("add_recipe");
+addBtn.addEventListener("click", () => {
+  const recipe = makeRecipe(crypto.randomUUID());
+  document.body.appendChild(recipe);
+});
+
+const shoppingListBtn = document.getElementById("shopping_list");
+shoppingListBtn.addEventListener("click", () => createShoppingList());
+
+function makeRecipe(recipeID, recipeName) {
   const recipe = document.createElement("div");
   recipe.classList.add("recipe");
   recipe.dataset.id = recipeID;
@@ -53,13 +64,19 @@ function addNewRecipe() {
 
   const recipeNameInput = document.createElement("input");
   recipeNameInput.type = "text";
-  recipeNameInput.placeholder = "Recipe Name";
+  recipeNameInput.placeholder = "Add recipe";
+  if (recipeName) {
+    recipeNameInput.value = recipeName;
+  }
   recipeNameInput.classList.add("recipe-input");
 
   const addBtn = document.createElement("button");
   addBtn.classList.add("add");
   addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-  addBtn.addEventListener("click", () => addProductSelect(main));
+  addBtn.addEventListener("click", () => {
+    const productSelect = makeProductSelect();
+    main.appendChild(productSelect);
+  });
 
   const saveBtn = document.createElement("button");
   saveBtn.classList.add("saveBtn");
@@ -90,10 +107,11 @@ function addNewRecipe() {
   recipe.appendChild(tools);
   recipe.appendChild(main);
 
-  document.body.appendChild(recipe);
+  return recipe;
 }
 
-function addProductSelect(parent) {
+function makeProductSelect(selectedIngredientName, selectedIngredientAmount) {
+  console.log(selectedIngredientName, selectedIngredientAmount);
   const container = document.createElement("div");
   container.classList.add("product-container");
 
@@ -110,6 +128,9 @@ function addProductSelect(parent) {
     const option = document.createElement("option");
     option.value = product;
     option.text = product;
+    if (selectedIngredientName === product) {
+      option.selected = true;
+    }
     select.add(option);
   }
 
@@ -121,6 +142,9 @@ function addProductSelect(parent) {
   amountInput.min = 1;
   amountInput.max = 10000;
   amountInput.value = 1;
+  if (selectedIngredientAmount) {
+    amountInput.value = selectedIngredientAmount;
+  }
 
   //Create delete button
   const deleteBtn = document.createElement("button");
@@ -134,7 +158,7 @@ function addProductSelect(parent) {
   container.appendChild(amountInput);
   container.appendChild(deleteBtn);
 
-  parent.appendChild(container);
+  return container;
 }
 
 function saveRecipe(recipe) {
@@ -214,7 +238,7 @@ function createDownload(event) {
 }
 
 function createShoppingList() {
-  const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+  const recipes = JSON.parse(localStorage.getItem("recipes")) || {};
   const shoppingList = {};
 
   recipes.forEach((recipe) => {
