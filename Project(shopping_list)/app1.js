@@ -211,11 +211,12 @@ function deleteRecipe(recipe) {
 }
 
 function createDownload(event) {
-  const selectedrecipe = event.target.closest(".recipe");
-  const recipeName = selectedrecipe.querySelector(".recipe-input").value.trim();
+  const selectedRecipe = event.target.closest(".recipe");
+  const recipeId = selectedRecipe.dataset.id;
+  const recipeName = selectedRecipe.querySelector(".recipe-input").value.trim();
 
-  const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
-  const recipe = recipes.find((r) => r["recipe name"] === recipeName);
+  const recipesData = JSON.parse(localStorage.getItem("recipes")) || {};
+  const recipe = findRecipeById(recipesData, recipeId);
 
   if (!recipe) {
     console.log("Recipe not found.");
@@ -223,7 +224,7 @@ function createDownload(event) {
   }
 
   const shoppingListContent = recipe.ingredients
-    .map((ingredient) => `${ingredient.product} ${ingredient.amount}`)
+    .map((ingredient) => `${ingredient.name} ${ingredient.amount}`)
     .join("\n");
 
   const blob = new Blob([shoppingListContent], { type: "text/plain" });
@@ -237,20 +238,30 @@ function createDownload(event) {
   URL.revokeObjectURL(url);
 }
 
+function findRecipeById(recipesData, recipeId) {
+  for (const key in recipesData) {
+    if (key === recipeId) {
+      return recipesData[key];
+    }
+  }
+  return null;
+}
+
 function createShoppingList() {
-  const recipes = JSON.parse(localStorage.getItem("recipes")) || {};
+  const recipesData = JSON.parse(localStorage.getItem("recipes")) || {};
   const shoppingList = {};
 
-  recipes.forEach((recipe) => {
+  for (const recipeId in recipesData) {
+    const recipe = recipesData[recipeId];
     recipe.ingredients.forEach((ingredient) => {
-      const { product, amount } = ingredient;
-      if (shoppingList[product]) {
-        shoppingList[product] += parseInt(amount);
+      const { name, amount } = ingredient;
+      if (shoppingList[name]) {
+        shoppingList[name] += parseInt(amount);
       } else {
-        shoppingList[product] = parseInt(amount);
+        shoppingList[name] = parseInt(amount);
       }
     });
-  });
+  }
 
   const shoppingListContent = Object.entries(shoppingList)
     .map(([product, amount]) => `${product} ${amount}`)
