@@ -1,11 +1,25 @@
 import os
+from dotenv import load_dotenv
 from db_connection import FilmFlixDatabase
+
+load_dotenv()
+
+
+def get_integer_input(prompt):
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("Invalid input. Please enter a valid integer.")
 
 
 def main():
-    db_file = (
-        "/Users/volhasakharevich/Documents/Dev/just-it/FilmFlix_db_app/filmflix.db"
-    )
+    db_file = os.getenv("DB_FILE")
+    if not db_file:
+        print(
+            "Please set the DB_FILE environment variable to the path of your SQLite database file."
+        )
+        return
     db_path = os.path.abspath(db_file)
     db = FilmFlixDatabase(db_path)
 
