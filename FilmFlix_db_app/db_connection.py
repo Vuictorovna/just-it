@@ -52,9 +52,25 @@ class FilmFlixDatabase:
         self.execute_query(query, (filmID,))
         print("Record deleted successfully.")
 
-    def amend_record(self, current_title, new_title):
-        query = "UPDATE tblfilms SET title = ? WHERE title = ?"
-        self.execute_query(query, (new_title, current_title))
+    def amend_record(
+        self,
+        current_title,
+        new_title,
+        new_yearReleased,
+        new_rating,
+        new_duration,
+        new_genre,
+    ):
+        query = "UPDATE tblfilms SET title = ?, yearReleased = ?, rating = ?, duration = ?, genre = ? WHERE title = ?"
+        values = (
+            new_title,
+            new_yearReleased,
+            new_rating,
+            new_duration,
+            new_genre,
+            current_title,
+        )
+        self.execute_query(query, values)
         print("Record amended successfully.")
 
     def print_all_records(self):
@@ -64,7 +80,38 @@ class FilmFlixDatabase:
             print(record)
 
     def run_reports(self):
-        query = input("Enter your SQL SELECT query: ")
-        records = self.execute_query(query)
-        for record in records:
-            print(record)
+        while True:
+            print("\nFilmFlix Report Options")
+            print("1. Print details of all films")
+            print("2. Print all films of a particular genre")
+            print("3. Print all films of a particular year")
+            print("4. Print all films of a particular rating")
+            print("5. Exit")
+
+            choice = input("Enter your choice (1-5): ")
+
+            if choice == "1":
+                self.print_all_records()
+            elif choice == "2":
+                genre = input("Enter the genre: ")
+                query = f"SELECT * FROM tblfilms WHERE genre = '{genre}'"
+                records = self.execute_query(query)
+                for record in records:
+                    print(record)
+            elif choice == "3":
+                year = input("Enter the year: ")
+                query = f"SELECT * FROM tblfilms WHERE yearReleased = {year}"
+                records = self.execute_query(query)
+                for record in records:
+                    print(record)
+            elif choice == "4":
+                rating = input("Enter the rating: ")
+                query = f"SELECT * FROM tblfilms WHERE rating = '{rating}'"
+                records = self.execute_query(query)
+                for record in records:
+                    print(record)
+            elif choice == "5":
+                print("Exiting...")
+                break
+            else:
+                print("Invalid choice. Please try again.")

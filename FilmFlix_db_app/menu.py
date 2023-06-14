@@ -3,7 +3,9 @@ from db_connection import FilmFlixDatabase
 
 
 def main():
-    db_file = "/Users/volhasakharevich/Documents/Dev/just-it/Theory/Python/Week 11(Python_project)/filmflix.db"
+    db_file = (
+        "/Users/volhasakharevich/Documents/Dev/just-it/FilmFlix_db_app/filmflix.db"
+    )
     db_path = os.path.abspath(db_file)
     db = FilmFlixDatabase(db_path)
 
@@ -35,7 +37,18 @@ def main():
         elif choice == "3":
             current_title = input("Enter the current title: ")
             new_title = input("Enter the new title: ")
-            db.amend_record(current_title, new_title)
+            new_yearReleased = input("Enter the new year released: ")
+            new_rating = input("Enter the new rating: ")
+            new_duration = input("Enter the new duration: ")
+            new_genre = input("Enter the new genre: ")
+            db.amend_record(
+                current_title,
+                new_title,
+                new_yearReleased,
+                new_rating,
+                new_duration,
+                new_genre,
+            )
 
         elif choice == "4":
             db.print_all_records()
