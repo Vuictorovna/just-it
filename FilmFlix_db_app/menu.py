@@ -37,11 +37,11 @@ def main():
         choice = input("Enter your choice (1-6): ")
 
         if choice == "1":
-            title = input("Enter the title: ")
+            title = input("Enter the title: ").capitalize()
             yearReleased = input("Enter the year released: ")
-            rating = input("Enter the rating: ")
+            rating = input("Enter the rating: ").capitalize()
             duration = input("Enter the duration: ")
-            genre = input("Enter the genre: ")
+            genre = input("Enter the genre: ").capitalize()
             db.add_record(title, yearReleased, rating, duration, genre)
 
         elif choice == "2":
@@ -49,12 +49,12 @@ def main():
             db.delete_record(filmID)
 
         elif choice == "3":
-            current_title = input("Enter the current title: ")
-            new_title = input("Enter the new title: ")
+            current_title = input("Enter the current title: ").capitalize()
+            new_title = input("Enter the new title: ").capitalize()
             new_yearReleased = input("Enter the new year released: ")
-            new_rating = input("Enter the new rating: ")
+            new_rating = input("Enter the new rating: ").capitalize()
             new_duration = input("Enter the new duration: ")
-            new_genre = input("Enter the new genre: ")
+            new_genre = input("Enter the new genre: ").capitalize()
             db.amend_record(
                 current_title,
                 new_title,
@@ -68,7 +68,37 @@ def main():
             db.print_all_records()
 
         elif choice == "5":
-            db.run_reports()
+            while True:
+                print("\nFilmFlix Report Options")
+                print("1. Print details of all films")
+                print("2. Print all films of a particular genre")
+                print("3. Print all films of a particular year")
+                print("4. Print all films of a particular rating")
+                print("5. Exit")
+
+                choice = input("Enter your choice (1-5): ")
+
+                if choice == "1":
+                    db.print_all_records()
+
+                elif choice == "2":
+                    genre = input("Enter the genre: ").capitalize()
+                    db.print_genre(genre)
+
+                elif choice == "3":
+                    year = input("Enter the year: ")
+                    db.print_year(year)
+
+                elif choice == "4":
+                    rating = input("Enter the rating: ").capitalize()
+                    db.print_rating(rating)
+
+                elif choice == "5":
+                    print("Exiting...")
+                    break
+
+                else:
+                    print("Invalid choice. Please try again.")
 
         elif choice == "6":
             db.disconnect()

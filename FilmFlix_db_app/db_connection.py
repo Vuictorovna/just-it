@@ -79,39 +79,20 @@ class FilmFlixDatabase:
         for record in records:
             print(record)
 
-    def run_reports(self):
-        while True:
-            print("\nFilmFlix Report Options")
-            print("1. Print details of all films")
-            print("2. Print all films of a particular genre")
-            print("3. Print all films of a particular year")
-            print("4. Print all films of a particular rating")
-            print("5. Exit")
+    def print_genre(self, genre):
+        query = "SELECT * FROM tblfilms WHERE genre = ?"
+        records = self.execute_query(query, (genre,))
+        for record in records:
+            print(record)
 
-            choice = input("Enter your choice (1-5): ")
+    def print_year(self, year):
+        query = "SELECT * FROM tblfilms WHERE yearReleased = ?"
+        records = self.execute_query(query, (year,))
+        for record in records:
+            print(record)
 
-            if choice == "1":
-                self.print_all_records()
-            elif choice == "2":
-                genre = input("Enter the genre: ")
-                query = f"SELECT * FROM tblfilms WHERE genre = '{genre}'"
-                records = self.execute_query(query)
-                for record in records:
-                    print(record)
-            elif choice == "3":
-                year = input("Enter the year: ")
-                query = f"SELECT * FROM tblfilms WHERE yearReleased = {year}"
-                records = self.execute_query(query)
-                for record in records:
-                    print(record)
-            elif choice == "4":
-                rating = input("Enter the rating: ")
-                query = f"SELECT * FROM tblfilms WHERE rating = '{rating}'"
-                records = self.execute_query(query)
-                for record in records:
-                    print(record)
-            elif choice == "5":
-                print("Exiting...")
-                break
-            else:
-                print("Invalid choice. Please try again.")
+    def print_rating(self, rating):
+        query = "SELECT * FROM tblfilms WHERE rating = ?"
+        records = self.execute_query(query, (rating,))
+        for record in records:
+            print(record)
