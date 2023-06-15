@@ -1,3 +1,4 @@
+import datetime
 import os
 from dotenv import load_dotenv
 from db_connection import FilmFlixDatabase
@@ -11,6 +12,20 @@ def get_integer_input(prompt):
             return int(input(prompt))
         except ValueError:
             print("Invalid input. Please enter a valid integer.")
+
+
+def get_year_input(prompt):
+    while True:
+        try:
+            year = int(input(prompt))
+            if 1900 <= year <= datetime.datetime.now().year:
+                return year
+            else:
+                print(
+                    "Invalid input. Please enter a valid year between 1900 and the current year."
+                )
+        except ValueError:
+            print("Invalid input. Please enter a valid year.")
 
 
 def main():
@@ -37,23 +52,39 @@ def main():
         choice = input("Enter your choice (1-6): ")
 
         if choice == "1":
-            title = input("Enter the title: ").capitalize()
-            yearReleased = input("Enter the year released: ")
-            rating = input("Enter the rating: ").capitalize()
-            duration = input("Enter the duration: ")
+            title = input("Enter the title: ").title()
+            yearReleased = get_year_input("Enter the year released: ")
+            rating = input("Enter the rating: ").upper()
+            duration = get_integer_input("Enter the duration: ")
             genre = input("Enter the genre: ").capitalize()
             db.add_record(title, yearReleased, rating, duration, genre)
 
         elif choice == "2":
-            filmID = input("Enter the filmID to delete: ")
-            db.delete_record(filmID)
+            filmID = get_integer_input("Enter the filmID to delete: ")
+            record_to_delete = db.get_record_by_id(filmID)
+            if record_to_delete:
+                print(f"Film ID: {record_to_delete[0]}")
+                print(f"Title: {record_to_delete[1]}")
+                print(f"Year Released: {record_to_delete[2]}")
+                print(f"Rating: {record_to_delete[3]}")
+                print(f"Duration: {record_to_delete[4]}")
+                print(f"Genre: {record_to_delete[5]}")
+                print("\n-------------------------\n")
+
+                confirmation = input(
+                    "Do you really want to delete this record? (yes/no): "
+                )
+                if confirmation.lower() == "yes":
+                    db.delete_record(filmID)
+            else:
+                print("No record found with this filmID.")
 
         elif choice == "3":
-            current_title = input("Enter the current title: ").capitalize()
-            new_title = input("Enter the new title: ").capitalize()
-            new_yearReleased = input("Enter the new year released: ")
-            new_rating = input("Enter the new rating: ").capitalize()
-            new_duration = input("Enter the new duration: ")
+            current_title = input("Enter the current title: ").title()
+            new_title = input("Enter the new title: ").title()
+            new_yearReleased = get_year_input("Enter the new year released: ")
+            new_rating = input("Enter the new rating: ").upper()
+            new_duration = get_integer_input("Enter the new duration: ")
             new_genre = input("Enter the new genre: ").capitalize()
             db.amend_record(
                 current_title,
@@ -86,11 +117,11 @@ def main():
                     db.print_genre(genre)
 
                 elif choice == "3":
-                    year = input("Enter the year: ")
+                    year = get_year_input("Enter the year: ")
                     db.print_year(year)
 
                 elif choice == "4":
-                    rating = input("Enter the rating: ").capitalize()
+                    rating = input("Enter the rating: ").upper()
                     db.print_rating(rating)
 
                 elif choice == "5":

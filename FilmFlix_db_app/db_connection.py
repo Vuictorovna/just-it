@@ -52,6 +52,11 @@ class FilmFlixDatabase:
         self.execute_query(query, (filmID,))
         print("Record deleted successfully.")
 
+    def get_record_by_id(self, filmID):
+        query = "SELECT * FROM tblfilms WHERE filmID = ?"
+        records = self.execute_query(query, (filmID,))
+        return records[0] if records else None
+
     def amend_record(
         self,
         current_title,
@@ -77,22 +82,46 @@ class FilmFlixDatabase:
         query = "SELECT * FROM tblfilms"
         records = self.execute_query(query)
         for record in records:
-            print(record)
+            print(f"Film ID: {record[0]}")
+            print(f"Title: {record[1]}")
+            print(f"Year Released: {record[2]}")
+            print(f"Rating: {record[3]}")
+            print(f"Duration: {record[4]}")
+            print(f"Genre: {record[5]}")
+            print("\n-------------------------\n")
 
     def print_genre(self, genre):
         query = "SELECT * FROM tblfilms WHERE genre = ?"
         records = self.execute_query(query, (genre,))
         for record in records:
-            print(record)
+            print(f"Film ID: {record[0]}")
+            print(f"Title: {record[1]}")
+            print(f"Year Released: {record[2]}")
+            print(f"Rating: {record[3]}")
+            print(f"Duration: {record[4]}")
+            print(f"Genre: {record[5]}")
+            print("\n-------------------------\n")
 
     def print_year(self, year):
         query = "SELECT * FROM tblfilms WHERE yearReleased = ?"
         records = self.execute_query(query, (year,))
         for record in records:
-            print(record)
+            print(f"Film ID: {record[0]}")
+            print(f"Title: {record[1]}")
+            print(f"Year Released: {record[2]}")
+            print(f"Rating: {record[3]}")
+            print(f"Duration: {record[4]}")
+            print(f"Genre: {record[5]}")
+            print("\n-------------------------\n")
 
     def print_rating(self, rating):
         query = "SELECT * FROM tblfilms WHERE rating = ?"
         records = self.execute_query(query, (rating,))
         for record in records:
-            print(record)
+            print(f"Film ID: {record[0]}")
+            print(f"Title: {record[1]}")
+            print(f"Year Released: {record[2]}")
+            print(f"Rating: {record[3]}")
+            print(f"Duration: {record[4]}")
+            print(f"Genre: {record[5]}")
+            print("\n-------------------------\n")
