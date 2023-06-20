@@ -53,7 +53,7 @@ class FilmFlixDatabase:
         print("Record deleted successfully.")
 
     def get_record_by_id(self, filmID):
-        query = "SELECT * FROM tblfilms WHERE filmID = ?"
+        query = "SELECT filmID, title, yearReleased, rating, duration, genre  FROM tblfilms WHERE filmID = ?"
         records = self.execute_query(query, (filmID,))
         return records[0] if records else None
 
@@ -79,21 +79,23 @@ class FilmFlixDatabase:
         print("Record amended successfully.")
 
     def get_all_records(self):
-        query = "SELECT * FROM tblfilms"
+        query = (
+            "SELECT filmID, title, yearReleased, rating, duration, genre  FROM tblfilms"
+        )
         records = self.execute_query(query)
         return records
 
     def get_genre(self, genre):
-        query = "SELECT * FROM tblfilms WHERE genre = ?"
+        query = "SELECT filmID, title, yearReleased, rating, duration, genre  FROM tblfilms WHERE genre = ?"
         records = self.execute_query(query, (genre,))
         return records
 
     def get_year(self, year):
-        query = "SELECT * FROM tblfilms WHERE yearReleased = ?"
+        query = "SELECT filmID, title, yearReleased, rating, duration, genre  FROM tblfilms WHERE yearReleased = ?"
         records = self.execute_query(query, (year,))
         return records
 
     def get_rating(self, rating):
-        query = "SELECT * FROM tblfilms WHERE rating = ?"
+        query = "SELECT filmID, title, yearReleased, rating, duration, genre  FROM tblfilms WHERE rating = ?"
         records = self.execute_query(query, (rating,))
         return records
