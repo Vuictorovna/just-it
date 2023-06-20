@@ -29,12 +29,12 @@ def get_year_input(prompt):
 
 
 def print_record(record):
-    print(f"Film ID: {record[0]}")
-    print(f"Title: {record[1]}")
-    print(f"Year Released: {record[2]}")
-    print(f"Rating: {record[3]}")
-    print(f"Duration: {record[4]}")
-    print(f"Genre: {record[5]}")
+    print(f"Film ID: {record['filmID']}")
+    print(f"Title: {record['title']}")
+    print(f"Year Released: {record['yearReleased']}")
+    print(f"Rating: {record['rating']}")
+    print(f"Duration: {record['duration']}")
+    print(f"Genre: {record['genre']}")
     print("\n-------------------------\n")
 
 
@@ -73,13 +73,7 @@ def main():
             filmID = get_integer_input("Enter the filmID to delete: ")
             record_to_delete = db.get_record_by_id(filmID)
             if record_to_delete:
-                print(f"Film ID: {record_to_delete[0]}")
-                print(f"Title: {record_to_delete[1]}")
-                print(f"Year Released: {record_to_delete[2]}")
-                print(f"Rating: {record_to_delete[3]}")
-                print(f"Duration: {record_to_delete[4]}")
-                print(f"Genre: {record_to_delete[5]}")
-                print("\n-------------------------\n")
+                print_record(record_to_delete)
 
                 confirmation = input(
                     "Do you really want to delete this record? (yes/no): "

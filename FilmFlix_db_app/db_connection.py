@@ -11,6 +11,7 @@ class FilmFlixDatabase:
     def connect(self):
         try:
             self.connection = sql.connect(self.db_path)
+            self.connection.row_factory = sql.Row
             self.cursor = self.connection.cursor()
             print("Connected to the database.")
         except sql.Error as e:
