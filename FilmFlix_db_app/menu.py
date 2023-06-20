@@ -28,6 +28,16 @@ def get_year_input(prompt):
             print("Invalid input. Please enter a valid year.")
 
 
+def print_record(record):
+    print(f"Film ID: {record[0]}")
+    print(f"Title: {record[1]}")
+    print(f"Year Released: {record[2]}")
+    print(f"Rating: {record[3]}")
+    print(f"Duration: {record[4]}")
+    print(f"Genre: {record[5]}")
+    print("\n-------------------------\n")
+
+
 def main():
     db_file = os.getenv("DB_FILE")
     if not db_file:
@@ -96,7 +106,9 @@ def main():
             )
 
         elif choice == "4":
-            db.print_all_records()
+            records = db.get_all_records()
+            for record in records:
+                print_record(record)
 
         elif choice == "5":
             while True:
@@ -110,19 +122,27 @@ def main():
                 choice = input("Enter your choice (1-5): ")
 
                 if choice == "1":
-                    db.print_all_records()
+                    records = db.get_all_records()
+                    for record in records:
+                        print_record(record)
 
                 elif choice == "2":
                     genre = input("Enter the genre: ").capitalize()
-                    db.print_genre(genre)
+                    records = db.get_genre(genre)
+                    for record in records:
+                        print_record(record)
 
                 elif choice == "3":
                     year = get_year_input("Enter the year: ")
-                    db.print_year(year)
+                    records = db.get_year(year)
+                    for record in records:
+                        print_record(record)
 
                 elif choice == "4":
                     rating = input("Enter the rating: ").upper()
-                    db.print_rating(rating)
+                    records = db.get_rating(rating)
+                    for record in records:
+                        print_record(record)
 
                 elif choice == "5":
                     print("Exiting...")
